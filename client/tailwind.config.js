@@ -1,0 +1,70 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  darkMode: 'class',
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        "surface": "var(--color-surface, #12131c)",
+        "surface-dim": "var(--color-surface-dim, #12131c)",
+        "surface-bright": "var(--color-surface-bright, #383843)",
+        "surface-container-lowest": "var(--color-surface-container-lowest, #0d0d16)",
+        "surface-container-low": "var(--color-surface-container-low, #1b1b24)",
+        "surface-container": "var(--color-surface-container, #1f1f28)",
+        "surface-container-high": "var(--color-surface-container-high, #292933)",
+        "surface-container-highest": "var(--color-surface-container-highest, #34343e)",
+        "on-surface": "var(--color-on-surface, #e3e1ef)",
+        "on-surface-variant": "var(--color-on-surface-variant, #c6c4dd)",
+        "outline": "var(--color-outline, #8f8fa5)",
+        "outline-variant": "var(--color-outline-variant, #454559)",
+        "surface-tint": "var(--color-surface-tint, #95ceee)",
+        "primary": "var(--color-primary, #95ceee)",
+        "on-primary": "var(--color-on-primary, #003548)",
+        "primary-container": "var(--color-primary-container, #004d67)",
+        "on-primary-container": "var(--color-on-primary-container, #c2e8ff)",
+        "secondary": "var(--color-secondary, #8fcef4)",
+        "on-secondary": "var(--color-on-secondary, #00354a)",
+        "secondary-container": "var(--color-secondary-container, #004c69)",
+        "on-secondary-container": "var(--color-on-secondary-container, #c4e7ff)",
+        "tertiary": "var(--color-tertiary, #c0c1ff)",
+        "on-tertiary": "var(--color-on-tertiary, #292a60)",
+        "tertiary-container": "var(--color-tertiary-container, #3f4178)",
+        "on-tertiary-container": "var(--color-on-tertiary-container, #e1e0ff)",
+        "error": "var(--color-error, #ffb4ab)",
+        "on-error": "var(--color-on-error, #690005)",
+        "error-container": "var(--color-error-container, #93000a)",
+        "on-error-container": "var(--color-on-error-container, #ffdad6)",
+        "inverse-surface": "var(--color-inverse-surface, #e3e1ef)",
+        "inverse-on-surface": "var(--color-inverse-on-surface, #302f3a)",
+        "inverse-primary": "var(--color-inverse-primary, #286580)"
+      },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        display: ['Hanken Grotesk', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+      },
+      spacing: {
+        'unit': '4px',
+        'gutter': '24px',
+        'section-gap': '64px',
+        'container-padding-desktop': '32px',
+        'container-padding-mobile': '16px',
+      },
+      borderRadius: {
+        DEFAULT: '0.25rem',
+        lg: '0.5rem',
+        xl: '0.75rem',
+        '2xl': '1rem',
+        full: '9999px',
+      },
+      boxShadow: {
+        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+        'glow': '0 0 20px rgba(149, 206, 238, 0.25)',
+      }
+    },
+  },
+  plugins: [],
+}
