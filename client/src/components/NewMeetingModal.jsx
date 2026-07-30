@@ -1,26 +1,28 @@
 import React, { useState } from 'react';
+import { createMeeting } from '../services/meetingService';
 
 export default function NewMeetingModal({ isOpen, onClose, onStartMeeting }) {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('Strategy');
+  const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title.trim()) return;
-    onStartMeeting({
-      id: `m-${Date.now()}`,
-      title: title.trim(),
-      dateMonth: 'OCT',
-      dateDay: '24',
-      time: 'Just now',
-      location: 'Virtual Lobby A',
-      host: 'Alex Chen',
-      category
-    });
-    setTitle('');
-    onClose();
+
+    setLoading(true);
+    try {
+      const meeting = await createMeeting({ title: title.trim() });
+      onStartMeeting(meeting);
+      setTitle('');
+      onClose();
+    } catch (err) {
+      console.error('[NewMeetingModal] Failed to create meeting:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -64,8 +66,19 @@ export default function NewMeetingModal({ isOpen, onClose, onStartMeeting }) {
             <button type="button" onClick={onClose} className="px-4 py-2 text-on-surface-variant hover:text-on-surface">
               Cancel
             </button>
-            <button type="submit" className="px-5 py-2.5 bg-primary text-on-primary font-bold rounded-xl hover:opacity-90 shadow-md">
-              Start Call Now
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-5 py-2.5 bg-primary text-on-primary font-bold rounded-xl hover:opacity-90 shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              {loading ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-on-primary border-t-transparent rounded-full animate-spin"></span>
+                  Creating...
+                </>
+              ) : (
+                'Start Call Now'
+              )}
             </button>
           </div>
         </form>

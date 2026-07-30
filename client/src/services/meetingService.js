@@ -2,7 +2,7 @@ import api from './api';
 
 /**
  * Create a new meeting.
- * @param {object} meetingData - { title, roomName, host, scheduledStartTime, ... }
+ * @param {object} meetingData - { title }
  * @returns {Promise<object>} The created meeting document
  */
 export const createMeeting = async (meetingData) => {
@@ -11,12 +11,11 @@ export const createMeeting = async (meetingData) => {
 };
 
 /**
- * Fetch meeting details by ID.
- * @param {string} meetingId - The MongoDB ObjectId of the meeting
- * @returns {Promise<object>} The meeting document with populated references
+ * Fetch all meetings for the authenticated user.
+ * @returns {Promise<array>} Array of meeting documents
  */
-export const getMeetingDetails = async (meetingId) => {
-  const response = await api.get(`/meetings/${meetingId}`);
+export const getUserMeetings = async () => {
+  const response = await api.get('/meetings');
   return response.data;
 };
 

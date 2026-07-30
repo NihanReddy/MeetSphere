@@ -1,65 +1,79 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { getUserMeetings } from '../services/meetingService';
 
 export default function DashboardView({
   onJoinMeeting,
   onOpenNewMeeting,
   searchQuery
 }) {
-  const meetings = [
-    {
-      id: 'q4-strategy',
-      title: 'Q4 Strategy Planning',
-      dateMonth: 'OCT',
-      dateDay: '24',
-      time: '10:00 AM - 11:30 AM',
-      location: 'Virtual Lobby A',
-      host: 'Marcus V.',
-      participants: [
-        { name: 'Sarah Chen', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80' },
-        { name: 'Marcus Vance', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80' },
-        { name: 'Elena Rostova', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80' },
-      ],
-      extraCount: 12,
-      isLiveNow: true,
-      category: 'Strategy'
-    },
-    {
-      id: 'client-onboarding',
-      title: 'Client Onboarding: Nexus Redesign',
-      dateMonth: 'OCT',
-      dateDay: '24',
-      time: '1:30 PM - 2:00 PM',
-      location: 'Room 402 (London)',
-      host: 'Alex Chen',
-      participants: [
-        { name: 'David Lin', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80' },
-        { name: 'Jordan Taylor', avatar: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&auto=format&fit=crop&q=80' },
-      ],
-      extraCount: 2,
-      isLiveNow: false,
-      category: 'Design'
-    },
-    {
-      id: 'eng-arch',
-      title: 'Cloud Architecture & Security Audit',
-      dateMonth: 'OCT',
-      dateDay: '24',
-      time: '3:30 PM - 4:30 PM',
-      location: 'Virtual Lobby B',
-      host: 'David Lin',
-      participants: [
-        { name: 'Marcus Vance', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80' },
-        { name: 'Sarah Chen', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80' },
-      ],
-      extraCount: 5,
-      isLiveNow: false,
-      category: 'Engineering'
+  const [meetings, setMeetings] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function fetchMeetings() {
+      try {
+        const data = await getUserMeetings();
+        if (!cancelled) {
+          setMeetings(data);
+        }
+      } catch (err) {
+        console.error('[DashboardView] Failed to fetch meetings:', err);
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
     }
-  ];
+
+    fetchMeetings();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  /**
+   * Format a date object into a display-friendly format.
+   */
+  function formatMeetingDate(createdAt) {
+    const d = new Date(createdAt);
+    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    return {
+      dateMonth: months[d.getMonth()],
+      dateDay: d.getDate().toString().padStart(2, '0')
+    };
+  }
+
+  /**
+   * Map a backend meeting document to the display shape used by the UI.
+   */
+  function mapMeeting(m) {
+    const { dateMonth, dateDay } = formatMeetingDate(m.createdAt);
+    return {
+      id: m._id,
+      _id: m._id,
+      title: m.title,
+      roomName: m.roomName,
+      status: m.status,
+      dateMonth,
+      dateDay,
+      time: new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      location: m.roomName,
+      host: m.hostId?.name || 'You',
+      participants: [],
+      extraCount: 0,
+      isLiveNow: m.status === 'active',
+      category: 'General'
+    };
+  }
+
+  const displayMeetings = meetings.map(mapMeeting);
 
   const filteredMeetings = searchQuery
-    ? meetings.filter(m => m.title.toLowerCase().includes(searchQuery.toLowerCase()) || m.location.toLowerCase().includes(searchQuery.toLowerCase()))
-    : meetings;
+    ? displayMeetings.filter(m => m.title.toLowerCase().includes(searchQuery.toLowerCase()) || m.location.toLowerCase().includes(searchQuery.toLowerCase()))
+    : displayMeetings;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
