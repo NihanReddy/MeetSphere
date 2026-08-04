@@ -1,6 +1,7 @@
- import express from 'express';
+import express from 'express';
 import cors from 'cors';
 import http from 'http';
+import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { connectDB } from './config/db.js';
 import { connectRedis } from './config/redis.js';
