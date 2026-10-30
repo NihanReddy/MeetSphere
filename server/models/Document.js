@@ -27,6 +27,11 @@ const DocumentSchema = new mongoose.Schema({
   associatedMeeting: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Meeting'
+  },
+  channel: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Channel',
+    index: true
   }
 }, {
   timestamps: true

@@ -30,6 +30,12 @@ const ChannelSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    index: true
+  },
   isLive: {
     type: Boolean,
     default: false
@@ -42,5 +48,7 @@ const ChannelSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
+
+ChannelSchema.index({ members: 1, createdAt: 1 });
 
 export const Channel = mongoose.model('Channel', ChannelSchema);

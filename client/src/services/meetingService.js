@@ -106,10 +106,10 @@ export const removeMeetingParticipant = async (roomId, participantIdentity) => {
 // ── Document API ──────────────────────────────────────────────────────────────
 
 /**
- * Fetch documents owned by the authenticated user.
+ * Fetch personal documents or documents shared in a channel.
  */
-export const getUserDocuments = async () => {
-  const response = await api.get('/documents');
+export const getUserDocuments = async (channelId) => {
+  const response = await api.get('/documents', { params: channelId ? { channelId } : undefined });
   return response.data;
 };
 
@@ -117,11 +117,13 @@ export const getUserDocuments = async () => {
  * Upload a document file (multipart/form-data).
  * @param {File} file - The file object from an <input type="file"> element.
  * @param {string} [meetingId] - Optional associated meeting ID.
+ * @param {string} [channelId] - Optional channel to share the file with.
  */
-export const uploadDocument = async (file, meetingId) => {
+export const uploadDocument = async (file, meetingId, channelId) => {
   const formData = new FormData();
   formData.append('file', file);
   if (meetingId) formData.append('meetingId', meetingId);
+  if (channelId) formData.append('channelId', channelId);
   const response = await api.post('/documents/upload', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   });
@@ -133,6 +135,41 @@ export const uploadDocument = async (file, meetingId) => {
  */
 export const deleteDocument = async (docId) => {
   const response = await api.delete(`/documents/${encodeURIComponent(docId)}`);
+  return response.data;
+};
+
+export const getChannels = async () => {
+  const response = await api.get('/channels');
+  return response.data;
+};
+
+export const createChannel = async (channelData) => {
+  const response = await api.post('/channels', channelData);
+  return response.data;
+};
+
+export const getChannel = async (channelId) => {
+  const response = await api.get(`/channels/${encodeURIComponent(channelId)}`);
+  return response.data;
+};
+
+export const sendChannelMessage = async (channelId, text) => {
+  const response = await api.post(`/channels/${encodeURIComponent(channelId)}/messages`, { text });
+  return response.data;
+};
+
+export const addChannelMember = async (channelId, email) => {
+  const response = await api.post(`/channels/${encodeURIComponent(channelId)}/members`, { email });
+  return response.data;
+};
+
+export const removeChannelMember = async (channelId, userId) => {
+  const response = await api.delete(`/channels/${encodeURIComponent(channelId)}/members/${encodeURIComponent(userId)}`);
+  return response.data;
+};
+
+export const leaveChannel = async (channelId) => {
+  const response = await api.post(`/channels/${encodeURIComponent(channelId)}/leave`);
   return response.data;
 };
 
@@ -149,5 +186,12 @@ export default {
   deleteMeeting,
   getUserDocuments,
   uploadDocument,
-  deleteDocument
+  deleteDocument,
+  getChannels,
+  createChannel,
+  getChannel,
+  sendChannelMessage,
+  addChannelMember,
+  removeChannelMember,
+  leaveChannel
 };

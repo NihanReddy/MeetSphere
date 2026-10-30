@@ -120,6 +120,14 @@ Open `http://localhost:3000` in your web browser.
 | `POST` | `/api/meetings/token` | Generate authorized LiveKit room token |
 | `POST` | `/api/meetings/:roomId/record` | Initiate cloud egress recording |
 | `POST` | `/api/meetings/:roomId/messages` | Send & persist in-meeting chat message |
+| `GET` | `/api/channels` | List channels the authenticated user belongs to |
+| `POST` | `/api/channels` | Create a persistent channel/group |
+| `GET` | `/api/channels/:channelId` | Read a channel, members, and persistent messages |
+| `POST` | `/api/channels/:channelId/members` | Owner adds an existing user by email |
+| `DELETE` | `/api/channels/:channelId/members/:userId` | Owner removes a channel member |
+| `POST` | `/api/channels/:channelId/messages` | Persist a channel message |
+| `GET` | `/api/documents?channelId=:channelId` | List documents shared in a channel |
+| `POST` | `/api/documents/upload` | Upload a document to a channel with `channelId` |
 
 ---
 

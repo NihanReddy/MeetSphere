@@ -13,6 +13,7 @@ import teamRoutes from './routes/teamRoutes.js';
 import iceRoutes from './routes/iceRoutes.js';
 import webhookRoutes from './routes/webhookRoutes.js';
 import documentRoutes from './routes/documentRoutes.js';
+import channelRoutes from './routes/channelRoutes.js';
 import { requestLogger } from './middleware/requestLogger.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 
@@ -50,6 +51,7 @@ app.use('/api/auth', authRoutes);
 
 // Mount Document Routes
 app.use('/api/documents', documentRoutes);
+app.use('/api/channels', channelRoutes);
 
 // Mount WebRTC Dynamic ICE Server Routes (v1 API & base API)
 app.use('/api/v1', iceRoutes);
